@@ -13,6 +13,8 @@ namespace StudentManagementSystem.Models
         public int SubjectID { get; set; }
 
         public decimal Score { get; set; }
+
+        [Column("Grade")] // ← Maps "GradeLetter" → "Grade" in DB
         public string GradeLetter { get; set; }
 
         // Navigation properties (connect tables)

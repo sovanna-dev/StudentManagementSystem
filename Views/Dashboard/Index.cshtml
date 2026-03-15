@@ -1,0 +1,220 @@
+﻿<div class="container mt-4">
+    <h3 class="fw-bold mb-4">
+        <i class="bi bi-speedometer2 text-primary"></i>
+        Admin Dashboard
+    </h3>
+
+    <!-- Summary Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3">
+            <div class="card bg-primary text-white shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-people-fill"
+                       style="font-size:2rem"></i>
+                    <h2 class="fw-bold">
+                        @ViewBag.TotalStudents
+                    </h2>
+                    <p class="mb-0 small">Total Students</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-success text-white shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-book-fill"
+                       style="font-size:2rem"></i>
+                    <h2 class="fw-bold">
+                        @ViewBag.TotalSubjects
+                    </h2>
+                    <p class="mb-0 small">Subjects</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-warning text-white shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-bar-chart-fill"
+                       style="font-size:2rem"></i>
+                    <h2 class="fw-bold">
+                        @ViewBag.TotalGrades
+                    </h2>
+                    <p class="mb-0 small">Grades Recorded</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-3">
+            <div class="card bg-info text-white shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-check-fill"
+                       style="font-size:2rem"></i>
+                    <h2 class="fw-bold">
+                        @ViewBag.TotalPresent
+                    </h2>
+                    <p class="mb-0 small">Attendance</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Grade Distribution Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header fw-bold">
+                    <i class="bi bi-pie-chart-fill
+                               text-success"></i>
+                    Grade Distribution
+                </div>
+                <div class="card-body">
+                    <canvas id="gradeChart"
+                            height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Class Distribution Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-header fw-bold">
+                    <i class="bi bi-bar-chart-fill
+                               text-primary"></i>
+                    Students per Class
+                </div>
+                <div class="card-body">
+                    <canvas id="classChart"
+                            height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Students -->
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header fw-bold">
+                    <i class="bi bi-trophy-fill
+                               text-warning"></i>
+                    Top 5 Students by Average Score
+                </div>
+                <div class="card-body p-0">
+                    <table class="table
+                                  table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Rank</th>
+                                <th>Student</th>
+                                <th>Average Score</th>
+                                <th>Performance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int rank = 1;
+                            }
+                            @foreach (dynamic student
+                                                        in ViewBag.TopStudents)
+                            {
+                                <tr>
+                                    <td>
+                                        @if (rank == 1)
+                                        {
+                                            <span>🥇</span>
+                                        }
+                                        else if (rank == 2)
+                                        {
+                                            <span>🥈</span>
+                                        }
+                                        else if (rank == 3)
+                                        {
+                                            <span>🥉</span>
+                                        }
+                                        else
+                                        {
+                                            @rank
+                                        }
+                                </td>
+                                <td class="fw-bold">
+                                    @student.Name
+                                </td>
+                                <td>
+                                    @(Math.Round(
+                                                                        (double)student.Average,
+                                                                        1))
+                                </td>
+                                <td>
+                                    <div class="progress"
+                                         style="height:20px;
+                                             width:150px">
+                                        <div class="progress-bar
+                                                bg-@(student.Average >= 80
+                                                                                                 ? "success"
+                                                                                                 : student.Average >= 60
+                                                                                                 ? "warning"
+                                                                                                 : "danger")"
+                                                                                                            style="width:@(student.Average)%">
+                                            @(Math.Round(
+                                                                                        (double)student.Average,
+                                                                                        1))%
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                                                        rank++;
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Grade Pie Chart
+    new Chart(document.getElementById('gradeChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['A', 'B+', 'B', 'C', 'F'],
+            datasets: [{
+                data: [
+                    @ViewBag.GradeA,
+                    @ViewBag.GradeBP,
+                    @ViewBag.GradeB,
+                    @ViewBag.GradeC,
+                    @ViewBag.GradeF
+                ],
+                backgroundColor: [
+                    '#198754','#0d6efd',
+                    '#0dcaf0','#ffc107','#dc3545'
+                ]
+            }]
+        },
+        options: { responsive: true }
+    });
+
+    // Class Bar Chart
+    new Chart(document.getElementById('classChart'), {
+        type: 'bar',
+        data: {
+            labels: ['CS-A', 'CS-B', 'CS-C'],
+            datasets: [{
+                label: 'Students',
+                data: [
+                    @ViewBag.ClassA,
+                    @ViewBag.ClassB,
+                    @ViewBag.ClassC
+                ],
+                backgroundColor: [
+                    '#0d6efd','#198754','#ffc107'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: { y: { beginAtZero: true } }
+        }
+    });
+</script>
+
+
