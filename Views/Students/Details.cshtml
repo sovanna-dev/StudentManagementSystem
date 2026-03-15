@@ -1,0 +1,74 @@
+﻿@model Student
+
+<div class="container mt-4" style="max-width:500px">
+    <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-person-badge"></i>
+                Student Profile
+            </h5>
+        </div>
+        <div class="card-body text-center">
+            <!-- Big Avatar -->
+            <div class="rounded-circle d-inline-flex
+                        align-items-center justify-content-center
+                        fw-bold text-white mb-3"
+                 style="width:80px;height:80px;font-size:32px;
+                 background:@(Model.Gender == "Female"
+                                      ? "#d63384" : "#0d6efd")">
+                @Model.FullName.Substring(0, 1)
+            </div>
+            <h4 class="fw-bold">@Model.FullName</h4>
+            <span class="badge mb-3"
+                  style="background:@(Model.Gender == "Female"
+                                        ? "#d63384" : "#0d6efd")">
+                @Model.Gender
+            </span>
+
+            <table class="table table-borderless text-start">
+                <tr>
+                    <td class="text-muted fw-bold">
+                        <i class="bi bi-envelope"></i> Email
+                    </td>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">
+                        <i class="bi bi-phone"></i> Phone
+                    </td>
+                    <td>@Model.Phone</td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">
+                        <i class="bi bi-book"></i> Class
+                    </td>
+                    <td>@Model.ClassRoom</td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">
+                        <i class="bi bi-cake"></i> Birthday
+                    </td>
+                    <td>@Model.DateOfBirth.ToString("dd MMM yyyy")</td>
+                </tr>
+                <tr>
+                    <td class="text-muted fw-bold">
+                        <i class="bi bi-calendar"></i> Joined
+                    </td>
+                    <td>@Model.CreatedDate.ToString("dd MMM yyyy")</td>
+                </tr>
+            </table>
+        </div>
+        <div class="card-footer d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.ID"
+               class="btn btn-warning flex-fill">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a asp-action="Index"
+               class="btn btn-outline-secondary flex-fill">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+</div>
+
+
